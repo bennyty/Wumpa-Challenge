@@ -99,25 +99,150 @@ int findPath(int targetX, int targetY, int myX, int myY, int &board[][][], int p
 
 void markBoard(int x, int y, int thing, int &board[][][]){
 	//when only 1 adjactent thing
+	//if a spot is already known as safe, do not mark it otherwise
 	if(x > 0 && board[x-1][y][1] == 0){
 		//mark west
-		board[x - 1][y][thing] = 1;
+		board[x-1][y][thing] = 1;
 		for(int i = 2; i < 5; i++)
 			if (i != thing)
 				board[x-1][y][i] = 0;
 	}
-	if(x < 4 && board[x+1][y][1] == 0){
+	if(x < 3 && board[x+1][y][1] == 0){
+		//mark east
 		board[x+1][y][thing] = 1;
+		for(int i = 2; i < 5; i++){
+			if(i != thing)
+				board[x+1][y][i] = 0;
+		}
 	}
-	if(y > 0){
+	if(y > 0 && board[x][y-1][1] == 0){
+		//mark north
 		board[x][y-1][thing] = 1;
+		for(int i = 2; i < 5; i++){
+			if(i != thing)
+				board[x][y-1][i] = 0;
+		}
 	}
-	if(y < 4){
+	if(y < 3 && board[x][y+1][1] == 0){
+		//mark south
+		board[x][y+1][thing] = 1;
+		for(int i = 2; i < 5; i++){
+			if(i != thing)
+				board[x][y+1][i] = 0;
+		}
+	}
+	//mark this spot as visted
+	board[x][y][0] = 1;
+}
 
+void markBoard(int x, int y, int ob1, int ob2, int &board[][][]){
+	//for when 2 things are given
+	if(x > 0 && board[x-1][y][1] == 0){
+		//mark west
+		board[x-1][y][ob1] = 1;
+		board[x-1][y][ob2] = 1;
+		for(int i = 2; i < 5; i++)
+			if(i != ob1 && i != ob2)
+				board[x-1][y][i] = 1;
+	}
+	if(x < 3 && board[x+1][y][1] == 0){
+		//mark east
+		board[x+1][y][ob1] = 1;
+		board[x+1][y][ob2] = 1;
+		for(int i = 2; i < 5; i++)
+			if(i != ob1 && i != ob2)
+				board[x+1][y][i] = 1;
+	}
+	if(y > 0 && board[x][y-1][1] == 0){
+		//mark north
+		board[x][y-1][ob1] = 1;
+		board[x][y-1][ob2] = 1;
+		for(int i = 2; i < 5; i++)
+			if(i != ob1 && i != ob2)
+				board[x][y-1][i] = 1;
+	}
+	if(y < 3 && board[x][y+1][1] == 0){
+		//mark south
+		board[x][y+1][ob1] = 1;
+		board[x][y+1][ob2] = 1;
+		for(int i = 2; i < 5; i++)
+			if(i != ob1 && i != ob2)
+				board[x][y+1][i] = 1;
+	}
+
+	//mark this spot as visted
+	board[x][y][0] = 1;
+}
+
+void markBoard(int x, int y, int &board[][][]){
+	//case where we hear everything
+	if(x > 0 && board[x-1][y][1] == 0){
+		//mark west
+		for(int i = 2; i < 5; i++){
+			board[x-1][y][i] = 1;
+		}
+	}
+	if(x < 3 && board[x+1][y][1] == 0){
+		//mark east
+		for(int i = 2; i < 5; i++){
+			board[x+1][y][i] = 1;
+		}
+	}
+	if(y > 0 && board[x][y-1][1] == 0){
+		for(int i = 2; i < 5; i++){
+			board[x][y-1][i] = 1;
+		}
+	}
+	if(y < 3 && board[x][y+1][1] == 0){
+		for(int i = 2; i < 5; i++){
+			board[x][y+1][i] = 1;
+		}
 	}
 }
 
+void clearOtherSpaces(int x, int y, board& int[][][], int object){
+	for(int i = 0; i < 4; i++){
+		for(int j = 0; j < 4; j++){
+			//remove this possibility unless it is adjacent to the current square
+			if(	i == x-1 && j == y ||
+				i == x+1 && j == y ||
+				i == x && j == y+1 ||
+				i == x && j == y-1){
 
+				board[i][j][object] = 0;
+			}
+		}
+	}
+}
+
+void followPath(int &myX, int &myY, int[][] path, int endX, int endY, int &rotation){
+	int pathCount = 0;
+	while(myX != endX && myY != endY){
+		//keep going
+
+		//move
+		if(myX - path[pathIndex][0] == 0 && myY - path[pathIndex][1] == 1){
+			rotation = moveUp();
+			myY++;
+		}
+		else if(myX - path[pathIndex][0] == 0 && myY - path[pathIndex][1] == -1){
+			rotation = moveDown();
+			myY--;
+		}
+		else if(myX - path[pathIndex][0] == 1 && myY - path[pathIndex][1] == 0){
+			rotation = moveLeft();
+			myX--;
+		}
+		else if (myX - path[pathIndex][0] == -1 && myY - path[pathIndex][1] == 0){
+			rotation = moveRight();
+			myX++;
+		}
+		else{
+			//the path has a move that is not adjecent, oh no i have no idea what to do now
+		}
+		pathCount++;
+	}
+}
 
 {
 //make a 4x4 board, fill it properly
@@ -159,7 +284,7 @@ while(1){
 	}
 	else if(goldCount == 0){
 		//something went horribly wrong, we should never do this
-		//once the robot picked up the gold I think
+		//once the robot picked up the gold I think, might never even reach here
 	}
 
 	//see if there is only one location of the wumpus
@@ -198,6 +323,7 @@ while(1){
 	}
 
 	//go to nearX, nearY
+	
 	//call find path
 
 	//follow that path
@@ -208,55 +334,59 @@ while(1){
 	switch(input){
 		case 0:
 		//safe
-
+		markBoard(myX, myY, 1, board);
 
 		break;
 		case 1:
 		//near pit
+		markBoard(myX, myY, 4, board);
 
 		break;
 		case 2:
 		//near wumpus
+		markBoard(myX, myY, 2, board);
+		clearOtherSpaces(myX, myY, board, 2);
 
 		break;
 		case 3:
 		//near pit and wumpus
+		markBoard(myX, myY, 2, 4);
+		clearOtherSpaces(myX, myY, board, 2);
 
 		break;
 		case 4:
 		//near gold
+		markBoard(myX, myY, 3, 1, board);
+		clearOtherSpaces(myX, myY, board, 3);
 
 		break;
 		case 5:
 		//near pit and gold
+		markBoard(myX, myY, 3, 4, board);
+		clearOtherSpaces(myX, myY, board, 3);
 
 		break;
 		case 6:
 		//near gold and wumpus
+		markBoard(myX, myY, 3, 2, board);
+		clearOtherSpaces(myX, myY, board, 3);
+		clearOtherSpaces(myX, myY, board, 2);
 
 		break;
 		case 7:
 		//near pit, wumpus, and gold
+		markBoard(myX, myY, board);
+		clearOtherSpaces(myX, myY, board, 3);
+		clearOtherSpaces(myX, myY, board, 2);
 
 		break;
-		/*case 8:
-		//near gold
-
-		break;
-		case 10:
-		//near gold and pit
-
-		break;
-		case 12:
-		//near gold and wumpus
-
-		break;
-		case 14:
-		//near gold, pit, wumpus
-
-		break;*/
 		default:
 		//got the gold
+		//move back home
+		int[16][2] homePath;
+		findPath(0,0, myX, myY, board, homePath, 0);
+		followPath(myX, myY, homePath, 0,0, myDir);
+
 
 		break;
 	}
