@@ -281,6 +281,22 @@ while(1){
 	}
 	if(goldCount == 1){
 		//we have the location of the gold, find it and go to it
+		int gX;
+		int gY;
+		for(j = 0; j < 4; j++){
+			for(int i = 0; i < 4; i++){
+				if(board[i][j][3] == 1){
+					gX = i;
+					gY = j;
+					break;
+				}
+			}
+
+			int[16][2] goldPath;
+			findPath(gX, gY, myX, myY, board, goldPath, 0);
+			followPath(myX, myY, goldPath, gX, gY, myDir);
+			//go home
+		}
 	}
 	else if(goldCount == 0){
 		//something went horribly wrong, we should never do this
@@ -304,7 +320,8 @@ while(1){
 	//don't know the gold or the wumpus, time to go exploring!
 
 	//find the nearest unvisited safe space
-	float minDistance = 50;
+
+	float minDistance = 50.0f; //no idea if that's right
 	int nearX;
 	int nearY;
 	for(j = 0; j < 4; j++){
@@ -323,10 +340,12 @@ while(1){
 	}
 
 	//go to nearX, nearY
-	
-	//call find path
 
+	//call find path
+	int[16][2] path;
+	findPath(nearX, nearY, myX, myY, board, path, 0);
 	//follow that path
+	followPath(myX, myY, path, nearX, nearY, myDir);
 
 	//read the data
 	int input;
