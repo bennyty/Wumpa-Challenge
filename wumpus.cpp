@@ -212,7 +212,7 @@ void markBoard(int x, int y, int ob1, int ob2, int*** &board){
 			board[x][y+1][ob1] = 1;
 		else if(ob1 == 1)
 			board[x][y+1][ob2] = 1;
-		
+
 		for(int i = 2; i < 5; i++)
 			if(i != ob1 && i != ob2)
 				board[x][y+1][i] = 0;
@@ -419,24 +419,29 @@ while(1){
 	if(goldCount == 1){
 		//we have the location of the gold, find it and go to it
 		std::cout << "found the gold\n";
-		int asd;
-			std::cin >> asd;
+
 		int gX;
 		int gY;
 		for(j = 0; j < 4; j++){
 			for(int i = 0; i < 4; i++){
 				if(board[i][j][3] == 1){
+					std::cout << "I see gold in the loops at: " << i << ", " << j << std::endl;
 					gX = i;
 					gY = j;
 					break;
 				}
 			}
-
-			int goldPath[16][2];
+		}
+		int goldPath[16][2];
+			std::cout << "try to get the gold, at spot " << gX << ", " << gY << std::endl;
 			findPath(gX, gY, myX, myY, board, goldPath, 0);
 			followPath(myX, myY, goldPath, gX, gY, myDir);
 			//go home
-		}
+
+			findPath(0,0, myX, myY, board, goldPath, 0);
+			followPath(myX, myY, goldPath, 0, 0, myDir);
+
+			return 0;
 	}
 	else if(goldCount == 0){
 		//something went horribly wrong, we should never do this
