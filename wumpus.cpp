@@ -42,7 +42,9 @@ int findPath(int targetX, int targetY, int myX, int myY, int*** &board, int path
 
 
 	//check south
-
+	/*if(myX < targetX){
+		//prioritize going 
+	}*/
 
 
 	if(myY > 0 && board[myX][myY - 1][1] == 1){
@@ -128,6 +130,7 @@ int findPath(int targetX, int targetY, int myX, int myY, int*** &board, int path
 				return 1;
 		}
 	}
+	return 0;
 }
 
 
@@ -282,6 +285,24 @@ int moveRight(){
 	std::cout << "moved right\n";
 	return 90;
 }
+
+int up(int dir){
+	std::cout << "face north\n";
+	return 0;
+}
+int down(int dir){
+	std::cout << "face south\n";
+	return 180;
+}
+int left(int dir){
+	std::cout << "face west\n";
+	return 270;
+}
+int right(int dir){
+	std::cout << "face east\n";
+	return 90;
+}
+
 
 void followPath(int &myX, int &myY, int path[16][2], int endX, int endY, int &rotation){
 	int pathCount = 0;
@@ -465,6 +486,8 @@ while(1){
 
 		if(wumpusCount == 1){
 			//we know the location of the wumpus, time to kill it
+			std::cout << "time to kill the wumpus\n";
+			//std::cin >> asd;
 
 			//figure out where the wumpus is, go to next to it, and kill it (make sure to face it)
 			int wX;
@@ -516,18 +539,39 @@ while(1){
 				}
 			}
 
+			std::cout << "try to go to " << wumpX << ", " << wumpY << std::endl;
+			//std::cin >> asd;
 			//now go to the space that is best for wumpus killing
 			int wumpPath[16][2];
 			findPath(wumpX, wumpY, myX, myY, board, wumpPath, 0);
 			followPath(myX, myY, wumpPath, wumpX, wumpY, myDir);
 
 			//do the kill action
+			if(wX == wumpX && wY - 1 == wumpY){
+				//we are south of the wumpus
+				myDir = up(myDir);
+			}
+			else if(wX == wumpX && wY + 1 == wumpY){
+				//we are north of the wumpus
+				myDir = down(myDir);
+			}
+			else if(wX + 1 == wumpX && wY == wumpY){
+				//we are west of the wumpus
+				myDir = left(myDir);
+			}
+			else{
+				myDir = right(myDir);
+			}
+
 			std::cout << "kill the wumpus at space " << wX << "," << wY << std::endl;
 
 			//update board
 			board[wX][wY][2] = 0;
 			board[wX][wY][1] = 1;
 			wumpusLives = 0;
+
+			printBoard(board);
+			std::cout << "my location after wumpus hunting: " << myX << ", " << myY << std::endl;
 		}
 	}
 
@@ -604,8 +648,8 @@ while(1){
 		case 4:
 		//near gold
 		markBoard(myX, myY, 3, 1, board);
-		//std::cout << "input into the board\n";
-		//printBoard(board);
+		std::cout << "input into the board\n";
+		printBoard(board);
 		clearOtherSpaces(myX, myY, board, 3);
 
 		break;
