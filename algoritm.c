@@ -243,8 +243,7 @@ void followPath(int &myX, int &myY, int[][] path, int endX, int endY, int &rotat
 		pathCount++;
 	}
 }
-
-{
+int main() {
 //make a 4x4 board, fill it properly
 int init[5] = {0,0,1,1,1};
 
