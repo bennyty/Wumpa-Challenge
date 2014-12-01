@@ -3,11 +3,21 @@
 #include <string>
 
 //include everything
+
+/*int checkDir(int*** board, int myX, int myY, int dX, int dY, int path[16][2], int pathIndex){
+	if((myX + dX >= 0 && myX + dX <= 4 && myY + dY >= 0 && myY + dY <= 4) && board[mxX + dX][myY + dY][1] == 1){
+		for(int c = 0; c < )
+	}
+}*/
 int findPath(int targetX, int targetY, int myX, int myY, int*** &board, int path[16][2], int pathIndex){
 	//optimize so that it looks towards the desitnation first
 	//see if we have gotten to the target location
 	std::cout << "round " << pathIndex << std::endl;
+
+	
 	std::cout << myX << ", " << myY << std::endl;
+	
+
 	if(targetX == myX && targetY == myY){
 		//print the path please
 		std::cout << "done, path is: \n";
@@ -17,10 +27,13 @@ int findPath(int targetX, int targetY, int myX, int myY, int*** &board, int path
 		return 1;
 	}
 
+	
+
 	//make sure we are inside the board
 	if(myX < 0 || myX >= 4 || myY < 0 || myY >= 4)
 		return 0;
 	//check north, then south, then east, then west
+
 
 	//check south
 	if(myY > 0 && board[myX][myY - 1][1] == 1){
@@ -107,19 +120,21 @@ int findPath(int targetX, int targetY, int myX, int myY, int*** &board, int path
 	}
 }
 
+
 void markBoard(int x, int y, int thing, int*** &board){
 	//when only 1 adjactent thing
 	//if a spot is already known as safe, do not mark it otherwise
 	if(x > 0 && board[x-1][y][1] == 0){
 		//mark west
-		board[x-1][y][thing] = 1;
+		//if(board[x-1][y][thing])
+		//board[x-1][y][thing] = 1;
 		for(int i = 2; i < 5; i++)
-			if (i != thing)
+			if (i != thing &&)
 				board[x-1][y][i] = 0;
 	}
 	if(x < 3 && board[x+1][y][1] == 0){
 		//mark east
-		board[x+1][y][thing] = 1;
+		//board[x+1][y][thing] = 1;
 		for(int i = 2; i < 5; i++){
 			if(i != thing)
 				board[x+1][y][i] = 0;
@@ -127,7 +142,7 @@ void markBoard(int x, int y, int thing, int*** &board){
 	}
 	if(y > 0 && board[x][y-1][1] == 0){
 		//mark north
-		board[x][y-1][thing] = 1;
+		//board[x][y-1][thing] = 1;
 		for(int i = 2; i < 5; i++){
 			if(i != thing)
 				board[x][y-1][i] = 0;
@@ -135,7 +150,7 @@ void markBoard(int x, int y, int thing, int*** &board){
 	}
 	if(y < 3 && board[x][y+1][1] == 0){
 		//mark south
-		board[x][y+1][thing] = 1;
+		//board[x][y+1][thing] = 1;
 		for(int i = 2; i < 5; i++){
 			if(i != thing)
 				board[x][y+1][i] = 0;
@@ -143,38 +158,39 @@ void markBoard(int x, int y, int thing, int*** &board){
 	}
 	//mark this spot as visted
 	board[x][y][0] = 1;
+	board[x][y][3] = 0;
 }
 
 void markBoard(int x, int y, int ob1, int ob2, int*** &board){
 	//for when 2 things are given
 	if(x > 0 && board[x-1][y][1] == 0){
 		//mark west
-		board[x-1][y][ob1] = 1;
-		board[x-1][y][ob2] = 1;
+		//board[x-1][y][ob1] = 1;
+		//board[x-1][y][ob2] = 1;
 		for(int i = 2; i < 5; i++)
 			if(i != ob1 && i != ob2)
 				board[x-1][y][i] = 0;
 	}
 	if(x < 3 && board[x+1][y][1] == 0){
 		//mark east
-		board[x+1][y][ob1] = 1;
-		board[x+1][y][ob2] = 1;
+		//board[x+1][y][ob1] = 1;
+		//board[x+1][y][ob2] = 1;
 		for(int i = 2; i < 5; i++)
 			if(i != ob1 && i != ob2)
 				board[x+1][y][i] = 0;
 	}
 	if(y > 0 && board[x][y-1][1] == 0){
 		//mark north
-		board[x][y-1][ob1] = 1;
-		board[x][y-1][ob2] = 1;
+		//board[x][y-1][ob1] = 1;
+		//board[x][y-1][ob2] = 1;
 		for(int i = 2; i < 5; i++)
 			if(i != ob1 && i != ob2)
 				board[x][y-1][i] = 0;
 	}
 	if(y < 3 && board[x][y+1][1] == 0){
 		//mark south
-		board[x][y+1][ob1] = 1;
-		board[x][y+1][ob2] = 1;
+		//board[x][y+1][ob1] = 1;
+		//board[x][y+1][ob2] = 1;
 		for(int i = 2; i < 5; i++)
 			if(i != ob1 && i != ob2)
 				board[x][y+1][i] = 0;
@@ -182,6 +198,7 @@ void markBoard(int x, int y, int ob1, int ob2, int*** &board){
 
 	//mark this spot as visted
 	board[x][y][0] = 1;
+	board[x][y][3] = 0;
 }
 
 void markBoard(int x, int y, int*** &board){
